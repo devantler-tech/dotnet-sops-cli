@@ -1,0 +1,28 @@
+name: Assets
+
+on:
+  schedule:
+    - cron: "59 23 * * *"
+  workflow_dispatch:
+
+jobs:
+  download-binary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: ⤵️ Get SOPS binary
+        run: |
+          ./.github/scripts/get-sops-binary.sh
+      - name: ✍🏻 Create PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: Update SOPS binary
+          title: Update SOPS binary
+          body: |
+            This PR updates the SOPS binary used by Devantler.AgeCLI to the latest version.
+          branch: update-sops-binary
+          delete-branch: true
+          labels: dependencies
+          reviewers: devantler
+          assignees: devantler
+          signoff: true
