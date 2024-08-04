@@ -18,7 +18,8 @@ get() {
   chmod +x "$target_dir/$target_name"
 }
 
-get "https://getbin.io/getsops/sops?os=darwin&arch=amd64" "sops" "src/Devantler.SOPSCLI/assets/binaries" "sops-darwin-amd64" false
-get "https://getbin.io/getsops/sops?os=darwin&arch=arm64" "sops" "src/Devantler.SOPSCLI/assets/binaries" "sops-darwin-arm64" false
-get "https://getbin.io/getsops/sops?os=linux&arch=amd64" "sops" "src/Devantler.SOPSCLI/assets/binaries" "sops-linux-amd64" false
-get "https://getbin.io/getsops/sops?os=linux&arch=arm64" "sops" "src/Devantler.SOPSCLI/assets/binaries" "sops-linux-arm64" false
+get "https://getbin.io/getsops/sops?os=darwin&arch=amd64" "sops" "Devantler.SOPSCLI/assets/binaries" "sops-darwin-amd64" false
+get "https://getbin.io/getsops/sops?os=darwin&arch=arm64" "sops" "Devantler.SOPSCLI/assets/binaries" "sops-darwin-arm64" false
+get "https://getbin.io/getsops/sops?os=linux&arch=amd64" "sops" "Devantler.SOPSCLI/assets/binaries" "sops-linux-amd64" false
+get "https://getbin.io/getsops/sops?os=linux&arch=arm64" "sops" "Devantler.SOPSCLI/assets/binaries" "sops-linux-arm64" false
+curl -s "https://api.github.com/repos/getsops/sops/releases" | grep "browser_download.*.exe" | cut -d '"' -f 4 | sort -V| tail -n 2 | head -1 | xargs curl -LJ -o Devantler.SOPSCLI/assets/binaries/sops-windows-amd64.exe

@@ -10,6 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: ⚙️ Install bsdtar
+        run: |
+          sudo apt-get update
+          sudo apt-get install libarchive-tools
       - name: ⤵️ Get SOPS binary
         run: |
           ./.github/scripts/get-sops-binary.sh
@@ -19,7 +23,7 @@ jobs:
           commit-message: Update SOPS binary
           title: Update SOPS binary
           body: |
-            This PR updates the SOPS binary used by Devantler.AgeCLI to the latest version.
+            This PR updates the SOPS binary used by Devantler.SOPSCLI to the latest version.
           branch: update-sops-binary
           delete-branch: true
           labels: dependencies
