@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices;
 using CliWrap;
+using Devantler.CLIRunner;
 
 namespace Devantler.SOPSCLI;
 
@@ -34,18 +35,22 @@ public static class SOPS
   /// <param name="filePath">The path to the file to decrypt.</param>
   /// <param name="sopsAgeKeyFilePath">The path to the sops age key file.</param>
   /// <param name="token">The cancellation token.</param>
-  public static async Task<int> DecryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken token)
+  /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
+  /// <exception cref="CLIException">Thrown when the CLI command fails.</exception>
+  public static async Task DecryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken token)
   {
     if (!File.Exists(filePath))
     {
-      Console.WriteLine($"✕ File '{filePath}' does not exist");
-      return 1;
+      throw new FileNotFoundException($"File '{filePath}' does not exist");
     }
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
     var cmd = Command.WithArguments($"-d -i {filePath}");
-    var (exitCode, _) = await CLIRunner.CLIRunner.RunAsync(cmd, token, silent: true).ConfigureAwait(false);
+    var (exitCode, result) = await CLI.RunAsync(cmd, token, silent: true).ConfigureAwait(false);
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", null);
-    return exitCode;
+    if (exitCode != 0)
+    {
+      throw new SOPSException($"Failed to decrypt file '{filePath}': {result}");
+    }
   }
 
   /// <summary>
@@ -54,18 +59,22 @@ public static class SOPS
   /// <param name="filePath">The path to the file to encrypt.</param>
   /// <param name="sopsAgeKeyFilePath">The path to the sops age key file.</param>
   /// <param name="token">The cancellation token.</param>
+  /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
+  /// <exception cref="CLIException">Thrown when the CLI command fails.</exception>
   /// <returns>An integer representing the exit code.</returns>
-  public static async Task<int> EncryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken token)
+  public static async Task EncryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken token)
   {
     if (!File.Exists(filePath))
     {
-      Console.WriteLine($"✕ File '{filePath}' does not exist");
-      return 1;
+      throw new FileNotFoundException($"File '{filePath}' does not exist");
     }
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
     var cmd = Command.WithArguments($"-e -i {filePath}");
-    var (exitCode, _) = await CLIRunner.CLIRunner.RunAsync(cmd, token, silent: true).ConfigureAwait(false);
+    var (exitCode, result) = await CLI.RunAsync(cmd, token, silent: true).ConfigureAwait(false);
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", null);
-    return exitCode;
+    if (exitCode != 0)
+    {
+      throw new SOPSException($"Failed to encrypt file '{filePath}': {result}");
+    }
   }
 }
