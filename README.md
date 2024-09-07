@@ -18,7 +18,7 @@
 │       └── binaries
 └── Devantler.SOPSCLI.Tests
 
-8 directories
+7 directories
 ```
 <!-- readme-tree end -->
 
