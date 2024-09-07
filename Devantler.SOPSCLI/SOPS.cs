@@ -34,10 +34,10 @@ public static class SOPS
   /// </summary>
   /// <param name="filePath">The path to the file to decrypt.</param>
   /// <param name="sopsAgeKeyFilePath">The path to the sops age key file.</param>
-  /// <param name="token">The cancellation token.</param>
+  /// <param name="cancellationToken">The cancellation cancellationToken.</param>
   /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
   /// <exception cref="CLIException">Thrown when the CLI command fails.</exception>
-  public static async Task DecryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken token)
+  public static async Task DecryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken)
   {
     if (!File.Exists(filePath))
     {
@@ -45,7 +45,7 @@ public static class SOPS
     }
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
     var cmd = Command.WithArguments($"-d -i {filePath}");
-    var (exitCode, result) = await CLI.RunAsync(cmd, token, silent: true).ConfigureAwait(false);
+    var (exitCode, result) = await CLI.RunAsync(cmd, cancellationToken, silent: true).ConfigureAwait(false);
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", null);
     if (exitCode != 0)
     {
@@ -58,11 +58,11 @@ public static class SOPS
   /// </summary>
   /// <param name="filePath">The path to the file to encrypt.</param>
   /// <param name="sopsAgeKeyFilePath">The path to the sops age key file.</param>
-  /// <param name="token">The cancellation token.</param>
+  /// <param name="cancellationToken">The cancellation cancellationToken.</param>
   /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
   /// <exception cref="CLIException">Thrown when the CLI command fails.</exception>
   /// <returns>An integer representing the exit code.</returns>
-  public static async Task EncryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken token)
+  public static async Task EncryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken)
   {
     if (!File.Exists(filePath))
     {
@@ -70,7 +70,7 @@ public static class SOPS
     }
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
     var cmd = Command.WithArguments($"-e -i {filePath}");
-    var (exitCode, result) = await CLI.RunAsync(cmd, token, silent: true).ConfigureAwait(false);
+    var (exitCode, result) = await CLI.RunAsync(cmd, cancellationToken, silent: true).ConfigureAwait(false);
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", null);
     if (exitCode != 0)
     {
