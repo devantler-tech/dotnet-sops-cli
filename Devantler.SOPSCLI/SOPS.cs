@@ -45,7 +45,7 @@ public static class SOPS
     }
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
     var cmd = Command.WithArguments($"-d -i {filePath}");
-    var (exitCode, result) = await CLI.RunAsync(cmd, cancellationToken, silent: true).ConfigureAwait(false);
+    var (exitCode, result) = await CLI.RunAsync(cmd, silent: true, cancellationToken: cancellationToken).ConfigureAwait(false);
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", null);
     if (exitCode != 0)
     {
@@ -70,7 +70,7 @@ public static class SOPS
     }
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
     var cmd = Command.WithArguments($"-e -i {filePath}");
-    var (exitCode, result) = await CLI.RunAsync(cmd, cancellationToken, silent: true).ConfigureAwait(false);
+    var (exitCode, result) = await CLI.RunAsync(cmd, silent: true, cancellationToken: cancellationToken).ConfigureAwait(false);
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", null);
     if (exitCode != 0)
     {
