@@ -8,7 +8,7 @@ get() {
   local target_name=$4
   local isTar=$5
 
-  # check if tar
+  echo "Downloading $target_name from $url"
   if [ "$isTar" = true ]; then
     curl -LJ "$url" | tar xvz -C "$target_dir" "$binary"
     mv "$target_dir/$binary" "${target_dir}/$target_name"
