@@ -14,7 +14,7 @@ get() {
     mv "$target_dir/$binary" "${target_dir}/$target_name"
   elif [ "$archiveType" = "zip" ]; then
     curl -LJ "$url" -o "$target_dir/$target_name.zip"
-    unzip "$target_dir/$target_name.zip" -d "$target_dir"
+    unzip -o "$target_dir/$target_name.zip" -d "$target_dir"
     mv "$target_dir/$binary" "${target_dir}/$target_name"
     rm "$target_dir/$target_name.zip"
   elif [ "$archiveType" = false ]; then
