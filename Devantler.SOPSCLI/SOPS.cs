@@ -37,7 +37,7 @@ public static class SOPS
   /// <param name="cancellationToken">The cancellation cancellationToken.</param>
   /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
   /// <exception cref="CLIException">Thrown when the CLI command fails.</exception>
-  public static async Task DecryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken)
+  public static async Task DecryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken = default)
   {
     if (!File.Exists(filePath))
     {
@@ -62,7 +62,7 @@ public static class SOPS
   /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
   /// <exception cref="CLIException">Thrown when the CLI command fails.</exception>
   /// <returns>An integer representing the exit code.</returns>
-  public static async Task EncryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken)
+  public static async Task EncryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken = default)
   {
     if (!File.Exists(filePath))
     {
