@@ -62,7 +62,7 @@ public class EncryptAndDecryptAsyncTests
     // Make decrypted file use two spaces for indentation
     decryptedFile = decryptedFile.Replace("    ", "  ", StringComparison.OrdinalIgnoreCase);
     // Replace all OS specific newlines with \n
-    decryptedFile = decryptedFile.Replace(Environment.NewLine, "\n", StringComparison.OrdinalIgnoreCase);
+    decryptedFile = decryptedFile.ReplaceLineEndings();
 
     // Assert
     Assert.NotEqual(originalFile, encryptedFile);
