@@ -58,9 +58,11 @@ public class EncryptAndDecryptAsyncTests
     await SOPS.DecryptAsync(tempDir + "/test-secret.sops.yaml", tempDir + "/sops-test-key.txt");
     string decryptedFile = File.ReadAllText(tempDir + "/test-secret.sops.yaml");
     // Add --- to the beginning of the file to make it a valid yaml file
-    decryptedFile = "---" + "\n" + decryptedFile;
+    decryptedFile = "---" + Environment.NewLine + decryptedFile;
     // Make decrypted file use two spaces for indentation
     decryptedFile = decryptedFile.Replace("    ", "  ", StringComparison.OrdinalIgnoreCase);
+    // Replace all OS specific newlines with \n
+    decryptedFile = decryptedFile.Replace(Environment.NewLine, "\n", StringComparison.OrdinalIgnoreCase);
 
     // Assert
     Assert.NotEqual(originalFile, encryptedFile);
