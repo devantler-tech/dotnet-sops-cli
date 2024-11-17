@@ -16,11 +16,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="assets/binaries/*darwin-amd64" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="assets/binaries/*darwin-arm64" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="assets/binaries/*linux-amd64" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="assets/binaries/*linux-arm64" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="assets/binaries/*windows-amd64.exe" CopyToPublishDirectory="PreserveNewest" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="runtimes/*/native/*">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <PackagePath>runtimes/</PackagePath>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
