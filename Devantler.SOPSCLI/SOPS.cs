@@ -19,14 +19,17 @@ public static class SOPS
 
     string binary = (platformID, architecture, runtimeIdentifier) switch
     {
-      (PlatformID.Unix, Architecture.X64, "osx-x64") => "sops-darwin-amd64",
-      (PlatformID.Unix, Architecture.Arm64, "osx-arm64") => "sops-darwin-arm64",
-      (PlatformID.Unix, Architecture.X64, "linux-x64") => "sops-linux-amd64",
+      (PlatformID.Unix, Architecture.X64, "osx-x64") => "sops-osx-x64",
+      (PlatformID.Unix, Architecture.Arm64, "osx-arm64") => "sops-osx-arm64",
+      (PlatformID.Unix, Architecture.X64, "linux-x64") => "sops-linux-x64",
       (PlatformID.Unix, Architecture.Arm64, "linux-arm64") => "sops-linux-arm64",
-      (PlatformID.Win32NT, Architecture.X64, "win-x64") => "sops-windows-amd64.exe",
+      (PlatformID.Win32NT, Architecture.X64, "win-x64") => "sops-win-x64.exe",
       _ => throw new PlatformNotSupportedException($"Unsupported platform: {Environment.OSVersion.Platform} {RuntimeInformation.ProcessArchitecture}"),
     };
-    return Cli.Wrap($"{AppContext.BaseDirectory}assets{Path.DirectorySeparatorChar}binaries{Path.DirectorySeparatorChar}{binary}");
+    string binaryPath = Path.Combine(AppContext.BaseDirectory, binary);
+    return !File.Exists(binaryPath) ?
+      throw new SOPSException($"{binaryPath} not found.") :
+      Cli.Wrap(binaryPath);
   }
 
   /// <summary>
@@ -41,7 +44,7 @@ public static class SOPS
   {
     if (!File.Exists(filePath))
     {
-      throw new FileNotFoundException($"File '{filePath}' does not exist");
+      throw new SOPSException($"File '{filePath}' does not exist");
     }
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
     var cmd = Command.WithArguments($"-d -i {filePath}");
@@ -66,7 +69,7 @@ public static class SOPS
   {
     if (!File.Exists(filePath))
     {
-      throw new FileNotFoundException($"File '{filePath}' does not exist");
+      throw new SOPSException($"File '{filePath}' does not exist");
     }
     Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
     var cmd = Command.WithArguments($"-e -i {filePath}");
@@ -75,6 +78,68 @@ public static class SOPS
     if (exitCode != 0)
     {
       throw new SOPSException($"Failed to encrypt file '{filePath}': {result}");
+    }
+  }
+
+  /// <summary>
+  /// Edit a file using SOPS.
+  /// </summary>
+  /// <param name="filePath"></param>
+  /// <param name="sopsAgeKeyFilePath"></param>
+  /// <param name="cancellationToken"></param>
+  /// <returns></returns>
+  /// <exception cref="SOPSException"></exception>
+  public static async Task EditAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken = default)
+  {
+    if (!File.Exists(filePath))
+    {
+      throw new SOPSException($"File '{filePath}' does not exist");
+    }
+    Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
+    var cmd = Command.WithArguments($"edit {filePath}");
+    var (exitCode, result) = await CLI.RunAsync(cmd, silent: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+    Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", null);
+    if (exitCode != 0)
+    {
+      throw new SOPSException($"Failed to edit file '{filePath}': {result}");
+    }
+  }
+
+  /// <summary>
+  /// Generate a new data encryption key and reencrypt all values with the new key
+  /// </summary>
+  public static async Task RotateAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken = default)
+  {
+    if (!File.Exists(filePath))
+    {
+      throw new SOPSException($"File '{filePath}' does not exist");
+    }
+    Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
+    var cmd = Command.WithArguments($"-r -i {filePath}");
+    var (exitCode, result) = await CLI.RunAsync(cmd, silent: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+    Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", null);
+    if (exitCode != 0)
+    {
+      throw new SOPSException($"Failed to rotate file '{filePath}': {result}");
+    }
+  }
+
+  /// <summary>
+  /// Update the keys of SOPS files using the config file
+  /// </summary>
+  public static async Task UpdateKeysAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken = default)
+  {
+    if (!File.Exists(filePath))
+    {
+      throw new SOPSException($"File '{filePath}' does not exist");
+    }
+    Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", sopsAgeKeyFilePath);
+    var cmd = Command.WithArguments($"updatekeys {filePath}");
+    var (exitCode, result) = await CLI.RunAsync(cmd, silent: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+    Environment.SetEnvironmentVariable("SOPS_AGE_KEY_FILE", null);
+    if (exitCode != 0)
+    {
+      throw new SOPSException($"Failed to rotate file '{filePath}': {result}");
     }
   }
 }
