@@ -6,21 +6,22 @@ using k8s.Models;
 namespace Devantler.SOPSCLI.Tests.SOPSTests;
 
 /// <summary>
-/// Tests for the <see cref="SOPS.EncryptAsync(string, string, CancellationToken)"/> and <see cref="SOPS.DecryptAsync(string, string, CancellationToken)"/> methods.
+/// Tests for the <see cref="SOPS.RotateAsync(string, string, CancellationToken)"/> and <see cref="SOPS.UpdateKeysAsync(string, string, CancellationToken)"/> methods.
 /// </summary>
 [Collection("SOPS")]
-public class EncryptAndDecryptAsyncTests
+public class RotateAndUpdateKeysAsyncTests
 {
   readonly LocalAgeKeyManager _keyManager = new();
   readonly SecretGenerator _secretGenerator = new();
+
   /// <summary>
-  /// Test to verify a *.sops.yaml file can be encrypted and decrypted.
+  /// Test to verify a *.sops.yaml file can be rotated and updated.
   /// </summary>
   [Fact]
-  public async Task EncryptAndDecrypt_ShouldEncryptAndDecryptFile()
+  public async Task RotateAndUpdateKeys_ShouldRotateAndUpdateKeysFile()
   {
     // Arrange
-    string tempDir = Path.Combine(Path.GetTempPath(), "sops-cli-tests-encrypt-and-decrypt");
+    string tempDir = Path.Combine(Path.GetTempPath(), "sops-cli-tests-rotate-and-update");
     if (Directory.Exists(tempDir))
     {
       Directory.Delete(tempDir, true);
@@ -55,16 +56,14 @@ public class EncryptAndDecryptAsyncTests
     string originalFile = File.ReadAllText(tempDir + "/test-secret.sops.yaml");
     await SOPS.EncryptAsync(tempDir + "/test-secret.sops.yaml", tempDir + "/sops-test-key.txt");
     string encryptedFile = File.ReadAllText(tempDir + "/test-secret.sops.yaml");
-    await SOPS.DecryptAsync(tempDir + "/test-secret.sops.yaml", tempDir + "/sops-test-key.txt");
-    string decryptedFile = File.ReadAllText(tempDir + "/test-secret.sops.yaml");
-    // Add --- to the beginning of the file to make it a valid yaml file
-    decryptedFile = "---" + Environment.NewLine + decryptedFile;
-    // Make decrypted file use two spaces for indentation
-    decryptedFile = decryptedFile.Replace("    ", "  ", StringComparison.OrdinalIgnoreCase);
+    await SOPS.RotateAsync(tempDir + "/test-secret.sops.yaml", tempDir + "/sops-test-key.txt");
+    string rotatedFile = File.ReadAllText(tempDir + "/test-secret.sops.yaml");
+    await SOPS.UpdateKeysAsync(tempDir + "/test-secret.sops.yaml", tempDir + "/sops-test-key.txt");
 
     // Assert
     Assert.NotEqual(originalFile, encryptedFile);
-    Assert.Equal(originalFile, decryptedFile);
+    Assert.NotEqual(originalFile, rotatedFile);
+    Assert.NotEqual(encryptedFile, rotatedFile);
 
     // Cleanup
     Directory.Delete(tempDir, true);
