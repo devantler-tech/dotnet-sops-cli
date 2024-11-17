@@ -6,9 +6,9 @@ using k8s.Models;
 namespace Devantler.SOPSCLI.Tests.SOPSTests;
 
 /// <summary>
-/// Tests for the <see cref="SOPS.EncryptAsync(string, string, CancellationToken)"/> method.
+/// Tests for the <see cref="SOPS.EncryptAsync(string, string, CancellationToken)"/> and <see cref="SOPS.DecryptAsync(string, string, CancellationToken)"/> methods.
 /// </summary>
-public class EncryptAsyncTests
+public class EncryptAndDecryptAsyncTests
 {
   readonly LocalAgeKeyManager _keyManager = new();
   readonly SecretGenerator _secretGenerator = new();
