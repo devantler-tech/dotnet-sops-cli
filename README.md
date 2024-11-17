@@ -26,8 +26,9 @@
 │       └── win-x64
 │           └── native
 └── Devantler.SOPSCLI.Tests
+    └── SOPSTests
 
-16 directories
+17 directories
 ```
 <!-- readme-tree end -->
 
