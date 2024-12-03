@@ -19,8 +19,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
-    <PackageReference Include="Devantler.KeyManager.Local.Age" Version="1.1.32" />
-    <PackageReference Include="Devantler.KubernetesGenerator.Native" Version="1.0.1" />
+    <PackageReference Include="Devantler.KeyManager.Local.Age" Version="1.1.*" />
+    <PackageReference Include="Devantler.KubernetesGenerator.Native" Version="1.0.*" />
   </ItemGroup>
 
   <ItemGroup>
