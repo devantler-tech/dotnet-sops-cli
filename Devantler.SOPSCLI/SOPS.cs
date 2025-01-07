@@ -33,6 +33,30 @@ public static class SOPS
   }
 
   /// <summary>
+  /// Runs the sops CLI command with the given arguments.
+  /// </summary>
+  /// <param name="arguments"></param>
+  /// <param name="validation"></param>
+  /// <param name="silent"></param>
+  /// <param name="includeStdErr"></param>
+  /// <param name="cancellationToken"></param>
+  /// <returns></returns>
+  public static async Task<(int ExitCode, string Message)> RunAsync(
+    string[] arguments,
+    CommandResultValidation validation = CommandResultValidation.ZeroExitCode,
+    bool silent = false,
+    bool includeStdErr = true,
+    CancellationToken cancellationToken = default)
+  {
+    return await CLI.RunAsync(
+      Command.WithArguments(arguments),
+      validation: validation,
+      silent: silent,
+      includeStdErr: includeStdErr,
+      cancellationToken: cancellationToken).ConfigureAwait(false);
+  }
+
+  /// <summary>
   /// Decrypt a file using SOPS.
   /// </summary>
   /// <param name="filePath">The path to the file to decrypt.</param>
@@ -40,6 +64,7 @@ public static class SOPS
   /// <param name="cancellationToken">The cancellation cancellationToken.</param>
   /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
   /// <exception cref="CLIException">Thrown when the CLI command fails.</exception>
+  [Obsolete("This method is deprecated. Use RunAsync instead.")]
   public static async Task DecryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken = default)
   {
     if (!File.Exists(filePath))
@@ -65,6 +90,7 @@ public static class SOPS
   /// <exception cref="FileNotFoundException">Thrown when the file does not exist.</exception>
   /// <exception cref="CLIException">Thrown when the CLI command fails.</exception>
   /// <returns>An integer representing the exit code.</returns>
+  [Obsolete("This method is deprecated. Use RunAsync instead.")]
   public static async Task EncryptAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken = default)
   {
     if (!File.Exists(filePath))
@@ -89,6 +115,7 @@ public static class SOPS
   /// <param name="cancellationToken"></param>
   /// <returns></returns>
   /// <exception cref="SOPSException"></exception>
+  [Obsolete("This method is deprecated. Use RunAsync instead.")]
   public static async Task EditAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken = default)
   {
     if (!File.Exists(filePath))
@@ -108,6 +135,7 @@ public static class SOPS
   /// <summary>
   /// Generate a new data encryption key and reencrypt all values with the new key
   /// </summary>
+  [Obsolete("This method is deprecated. Use RunAsync instead.")]
   public static async Task RotateAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken = default)
   {
     if (!File.Exists(filePath))
@@ -127,6 +155,7 @@ public static class SOPS
   /// <summary>
   /// Update the keys of SOPS files using the config file
   /// </summary>
+  [Obsolete("This method is deprecated. Use RunAsync instead.")]
   public static async Task UpdateKeysAsync(string filePath, string sopsAgeKeyFilePath, CancellationToken cancellationToken = default)
   {
     if (!File.Exists(filePath))

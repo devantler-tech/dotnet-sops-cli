@@ -23,13 +23,17 @@ jobs:
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: 🎯 Get version
+        run: |
+          BINARY_VERSION=$(./Devantler.SOPSCLI/runtimes/linux-x64/native/sops-linux-x64 --version | head -n 1 | sed 'sops //')
+          echo "BINARY_VERSION=v$BINARY_VERSION" >> $GITHUB_ENV
       - name: ✍🏻 Create PR
         uses: peter-evans/create-pull-request@v7
         with:
-          commit-message: Update SOPS binary
+          commit-message: Update SOPS binary to ${{ env.BINARY_VERSION }}
           title: Update SOPS binary
           body: |
-            This PR updates the SOPS binary used by Devantler.SOPSCLI to the latest version.
+            This PR updates the SOPS binary used by Devantler.SOPSCLI to ${{ env.BINARY_VERSION }}.
           branch: update-sops-binary
           delete-branch: true
           labels: dependencies
