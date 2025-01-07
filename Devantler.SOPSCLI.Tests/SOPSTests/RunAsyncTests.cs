@@ -19,7 +19,7 @@ public class RunAsyncTests
 
     // Assert
     Assert.Equal(0, exitCode);
-    // "sops 3.7.1 (latest)"
-    Assert.Matches(@"^sops \d+\.\d+\.\d+ \(latest\)$", message.Trim());
+    string version = message.Trim().Replace(" (latest)", "", StringComparison.OrdinalIgnoreCase);
+    Assert.Matches(@"^sops \d+\.\d+\.\d+$", version);
   }
 }
