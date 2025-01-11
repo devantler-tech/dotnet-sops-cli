@@ -12,7 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Devantler.CLIRunner" Version="1.0.23" />
+    <PackageReference Include="Devantler.CLIRunner" Version="1.0.24" />
   </ItemGroup>
 
   <ItemGroup>
