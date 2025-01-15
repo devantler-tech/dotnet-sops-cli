@@ -43,5 +43,5 @@ To get started, you can install the package from NuGet.
 ```bash
 dotnet add package Devantler.SOPSCLI
 
-var (exitCode, message) = await SOPS.RunAsync(["arg1", "arg2"]);
+var (exitCode, output) = await SOPS.RunAsync(["arg1", "arg2"]);
 ```
