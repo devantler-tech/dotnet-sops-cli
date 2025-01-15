@@ -28,7 +28,7 @@
 └── Devantler.SOPSCLI.Tests
     └── SOPSTests
 
-17 directories
+18 directories
 ```
 <!-- readme-tree end -->
 
