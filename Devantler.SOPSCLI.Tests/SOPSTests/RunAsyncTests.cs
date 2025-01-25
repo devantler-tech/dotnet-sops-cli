@@ -15,11 +15,11 @@ public class RunAsyncTests
   public async Task RunAsync_Version_ReturnsVersion()
   {
     // Act
-    var (exitCode, message) = await SOPS.RunAsync(["--version"]);
+    var (exitCode, output) = await SOPS.RunAsync(["--version"]);
 
     // Assert
     Assert.Equal(0, exitCode);
-    string version = message.Trim().Replace(" (latest)", "", StringComparison.OrdinalIgnoreCase);
+    string version = output.Trim().Replace(" (latest)", "", StringComparison.OrdinalIgnoreCase);
     Assert.Matches(@"^sops \d+\.\d+\.\d+$", version);
   }
 }
