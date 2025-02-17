@@ -30,8 +30,8 @@ jobs:
       - name: ✍🏻 Create PR
         uses: peter-evans/create-pull-request@v7
         with:
-          commit-message: Update SOPS binary to ${{ env.BINARY_VERSION }}
-          title: Update SOPS to ${{ env.BINARY_VERSION }}
+          commit-message: "feat: Update  SOPS binary to ${{ env.BINARY_VERSION }}"
+          title: "feat: Update SOPS to ${{ env.BINARY_VERSION }}"
           body: |
             This PR updates the SOPS binary used by Devantler.SOPSCLI to ${{ env.BINARY_VERSION }}.
           branch: update-sops-binary
