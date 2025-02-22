@@ -29,6 +29,8 @@ jobs:
           echo "BINARY_VERSION=v$BINARY_VERSION" >> $GITHUB_ENV
       - name: ✍🏻 Create PR
         uses: peter-evans/create-pull-request@v7
+        env:
+          BINARY_VERSION: ${{ env.BINARY_VERSION }}
         with:
           commit-message: "feat: Update  SOPS binary to ${{ env.BINARY_VERSION }}"
           title: "feat: Update SOPS to ${{ env.BINARY_VERSION }}"
