@@ -5,6 +5,10 @@ on:
     - cron: "59 23 * * *"
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   download-binary:
     runs-on: ubuntu-latest
