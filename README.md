@@ -13,22 +13,24 @@
 ├── .github
 │   ├── scripts
 │   └── workflows
-├── Devantler.SOPSCLI
-│   └── runtimes
-│       ├── linux-arm64
-│       │   └── native
-│       ├── linux-x64
-│       │   └── native
-│       ├── osx-arm64
-│       │   └── native
-│       ├── osx-x64
-│       │   └── native
-│       └── win-x64
-│           └── native
-└── Devantler.SOPSCLI.Tests
-    └── SOPSTests
+├── src
+│   └── Devantler.SOPSCLI
+│       └── runtimes
+│           ├── linux-arm64
+│           │   └── native
+│           ├── linux-x64
+│           │   └── native
+│           ├── osx-arm64
+│           │   └── native
+│           ├── osx-x64
+│           │   └── native
+│           └── win-x64
+│               └── native
+└── tests
+    └── Devantler.SOPSCLI.Tests
+        └── SOPSTests
 
-18 directories
+20 directories
 ```
 <!-- readme-tree end -->
 
