@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Devantler.SOPSCLI\Devantler.SOPSCLI.csproj" />
+    <ProjectReference Include="..\..\src\Devantler.SOPSCLI\Devantler.SOPSCLI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
