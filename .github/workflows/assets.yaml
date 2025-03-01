@@ -27,7 +27,7 @@ jobs:
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: 🎯 Get version
         run: |
-          BINARY_VERSION=$(./Devantler.SOPSCLI/runtimes/linux-x64/native/sops-linux-x64 --version | head -n 1 | sed 's/sops //' | sed 's/ (latest)//')
+          BINARY_VERSION=$(./src/Devantler.SOPSCLI/runtimes/linux-x64/native/sops-linux-x64 --version | head -n 1 | sed 's/sops //' | sed 's/ (latest)//')
           echo "BINARY_VERSION=v$BINARY_VERSION" >> $GITHUB_ENV
       - name: ✍🏻 Create PR
         uses: peter-evans/create-pull-request@v7
