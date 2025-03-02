@@ -52,23 +52,18 @@ public static class SOPS
     string[] arguments,
     CommandResultValidation validation = CommandResultValidation.ZeroExitCode,
     bool silent = false,
-    bool includeStdIn = false,
     bool includeStdErr = true,
     CancellationToken cancellationToken = default)
   {
     using var stdIn = Console.OpenStandardInput();
-    using var stdOut = Console.OpenStandardInput();
+    using var stdOut = Console.OpenStandardOutput();
     using var stdErr = Console.OpenStandardError();
     var command = Command.WithArguments(arguments)
       .WithValidation(validation)
-      .WithStandardInputPipe(includeStdIn ? PipeSource.FromStream(stdIn) : PipeSource.Null)
+      .WithStandardInputPipe(silent ? PipeSource.Null : PipeSource.FromStream(stdIn))
       .WithStandardOutputPipe(silent ? PipeTarget.Null : PipeTarget.ToStream(stdOut))
       .WithStandardErrorPipe(silent || !includeStdErr ? PipeTarget.Null : PipeTarget.ToStream(stdErr));
-    var result = includeStdIn ?
-      await command.ExecuteAsync(cancellationToken) :
-      await command.ExecuteBufferedAsync(cancellationToken);
-    return includeStdIn ?
-      (result.ExitCode, string.Empty) :
-      (result.ExitCode, ((BufferedCommandResult)result).StandardOutput + ((BufferedCommandResult)result).StandardError);
+    var result = await command.ExecuteBufferedAsync(cancellationToken);
+    return (result.ExitCode, result.StandardOutput + result.StandardError);
   }
 }
