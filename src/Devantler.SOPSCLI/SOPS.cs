@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 using CliWrap;
-using Devantler.CLIRunner;
+using CliWrap.Buffered;
 
 namespace Devantler.SOPSCLI;
 
@@ -54,11 +54,15 @@ public static class SOPS
     bool includeStdErr = true,
     CancellationToken cancellationToken = default)
   {
-    return await CLI.RunAsync(
-      Command.WithArguments(arguments),
-      validation: validation,
-      silent: silent,
-      includeStdErr: includeStdErr,
-      cancellationToken: cancellationToken).ConfigureAwait(false);
+    using var stdIn = Console.OpenStandardInput();
+    using var stdOut = Console.OpenStandardOutput();
+    using var stdErr = Console.OpenStandardError();
+    var command = Command.WithArguments(arguments)
+      .WithValidation(validation)
+      .WithStandardInputPipe(silent ? PipeSource.Null : PipeSource.FromStream(stdIn))
+      .WithStandardOutputPipe(silent ? PipeTarget.Null : PipeTarget.ToStream(stdOut))
+      .WithStandardErrorPipe(silent || !includeStdErr ? PipeTarget.Null : PipeTarget.ToStream(stdErr));
+    var result = await command.ExecuteBufferedAsync(cancellationToken);
+    return (result.ExitCode, result.StandardOutput + result.StandardError);
   }
 }
