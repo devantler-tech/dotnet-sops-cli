@@ -3,7 +3,7 @@ using CliWrap;
 namespace Devantler.SOPSCLI.Tests.SOPSTests;
 
 /// <summary>
-/// Tests for the <see cref="SOPS.RunAsync(string[], CommandResultValidation, bool, bool, CancellationToken)" /> method.
+/// Tests for the <see cref="SOPS.RunAsync(string[], CommandResultValidation, bool, bool, bool, CancellationToken)" /> method.
 /// </summary>
 public class RunAsyncTests
 {
