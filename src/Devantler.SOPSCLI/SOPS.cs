@@ -1,7 +1,6 @@
 using System.Runtime.InteropServices;
 using CliWrap;
 using CliWrap.Buffered;
-using Devantler.CLIRunner;
 
 namespace Devantler.SOPSCLI;
 
