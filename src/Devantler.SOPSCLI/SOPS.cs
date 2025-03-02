@@ -44,7 +44,6 @@ public static class SOPS
   /// <param name="arguments"></param>
   /// <param name="validation"></param>
   /// <param name="silent"></param>
-  /// <param name="includeStdIn"></param>
   /// <param name="includeStdErr"></param>
   /// <param name="cancellationToken"></param>
   /// <returns></returns>
