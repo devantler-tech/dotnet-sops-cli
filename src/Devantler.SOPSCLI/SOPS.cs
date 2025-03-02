@@ -44,6 +44,7 @@ public static class SOPS
   /// <param name="arguments"></param>
   /// <param name="validation"></param>
   /// <param name="silent"></param>
+  /// <param name="includeStdIn"></param>
   /// <param name="includeStdErr"></param>
   /// <param name="cancellationToken"></param>
   /// <returns></returns>
@@ -51,6 +52,7 @@ public static class SOPS
     string[] arguments,
     CommandResultValidation validation = CommandResultValidation.ZeroExitCode,
     bool silent = false,
+    bool includeStdIn = false,
     bool includeStdErr = true,
     CancellationToken cancellationToken = default)
   {
@@ -59,10 +61,14 @@ public static class SOPS
     using var stdErr = Console.OpenStandardError();
     var command = Command.WithArguments(arguments)
       .WithValidation(validation)
-      .WithStandardInputPipe(PipeSource.FromStream(stdIn))
+      .WithStandardInputPipe(includeStdIn ? PipeSource.FromStream(stdIn) : PipeSource.Null)
       .WithStandardOutputPipe(silent ? PipeTarget.Null : PipeTarget.ToStream(stdOut))
       .WithStandardErrorPipe(silent || !includeStdErr ? PipeTarget.Null : PipeTarget.ToStream(stdErr));
-    var result = await command.ExecuteBufferedAsync(cancellationToken);
-    return (result.ExitCode, result.StandardOutput + result.StandardError);
+    var result = includeStdIn ?
+      await command.ExecuteAsync(cancellationToken) :
+      await command.ExecuteBufferedAsync(cancellationToken);
+    return includeStdIn ?
+      (result.ExitCode, string.Empty) :
+      (result.ExitCode, ((BufferedCommandResult)result).StandardOutput + ((BufferedCommandResult)result).StandardError);
   }
 }
