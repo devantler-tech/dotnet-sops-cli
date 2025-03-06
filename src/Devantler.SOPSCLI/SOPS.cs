@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using System.Text;
 using CliWrap;
 using CliWrap.Buffered;
 
@@ -54,15 +55,17 @@ public static class SOPS
     bool includeStdErr = true,
     CancellationToken cancellationToken = default)
   {
-    using var stdIn = Console.OpenStandardInput();
-    using var stdOut = Console.OpenStandardOutput();
-    using var stdErr = Console.OpenStandardError();
+    using var stdInConsole = Console.OpenStandardInput();
+    using var stdOutConsole = Console.OpenStandardOutput();
+    using var stdErrConsole = Console.OpenStandardError();
+    var stdOutBuffer = new StringBuilder();
+    var stdErrBuffer = new StringBuilder();
     var command = Command.WithArguments(arguments)
       .WithValidation(validation)
-      .WithStandardInputPipe(silent ? PipeSource.Null : PipeSource.FromStream(stdIn))
-      .WithStandardOutputPipe(silent ? PipeTarget.Null : PipeTarget.ToStream(stdOut))
-      .WithStandardErrorPipe(silent || !includeStdErr ? PipeTarget.Null : PipeTarget.ToStream(stdErr));
-    var result = await command.ExecuteBufferedAsync(cancellationToken);
-    return (result.ExitCode, result.StandardOutput + result.StandardError);
+      .WithStandardInputPipe(PipeSource.FromStream(stdInConsole))
+      .WithStandardOutputPipe(silent ? PipeTarget.ToStringBuilder(stdOutBuffer) : PipeTarget.Merge(PipeTarget.ToStringBuilder(stdOutBuffer), PipeTarget.ToStream(stdOutConsole)))
+      .WithStandardErrorPipe(silent || !includeStdErr ? PipeTarget.ToStringBuilder(stdErrBuffer) : PipeTarget.Merge(PipeTarget.ToStringBuilder(stdErrBuffer), PipeTarget.ToStream(stdErrConsole)));
+    var result = await command.ExecuteAsync(cancellationToken);
+    return (result.ExitCode, stdOutBuffer.ToString() + stdErrBuffer.ToString());
   }
 }
