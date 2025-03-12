@@ -64,7 +64,7 @@ public static class SOPS
       .WithValidation(validation)
       .WithStandardInputPipe(PipeSource.FromStream(stdInConsole))
       .WithStandardOutputPipe(silent ? PipeTarget.ToStringBuilder(stdOutBuffer) : PipeTarget.Merge(PipeTarget.ToStringBuilder(stdOutBuffer), PipeTarget.ToStream(stdOutConsole)))
-      .WithStandardErrorPipe(silent || !includeStdErr ? PipeTarget.ToStringBuilder(stdErrBuffer) : PipeTarget.Merge(PipeTarget.ToStringBuilder(stdErrBuffer), PipeTarget.ToStream(stdErrConsole)));
+      .WithStandardErrorPipe(silent && !includeStdErr ? PipeTarget.ToStringBuilder(stdErrBuffer) : PipeTarget.Merge(PipeTarget.ToStringBuilder(stdErrBuffer), PipeTarget.ToStream(stdErrConsole)));
     var result = await command.ExecuteAsync(cancellationToken);
     return (result.ExitCode, stdOutBuffer.ToString() + stdErrBuffer.ToString());
   }
