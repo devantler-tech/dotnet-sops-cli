@@ -11,8 +11,8 @@
 ```
 .
 ├── .github
-│   ├── scripts
 │   └── workflows
+├── scripts
 ├── src
 │   └── Devantler.SOPSCLI
 │       └── runtimes
