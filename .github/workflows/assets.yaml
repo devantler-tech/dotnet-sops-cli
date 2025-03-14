@@ -1,4 +1,4 @@
-name: Assets
+name: Embed Binaries
 
 on:
   schedule:
@@ -8,44 +8,10 @@ on:
 permissions: {}
 
 jobs:
-  download-binary:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Generate GitHub App Token
-        uses: tibdex/github-app-token@v2
-        id: generate-token
-        with:
-          app_id: ${{ vars.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
-      - uses: actions/checkout@v4
-        with:
-          lfs: true
-          token: ${{ steps.generate-token.outputs.token }}
-      - name: ⚙️ Install bsdtar
-        run: |
-          sudo apt-get update
-          sudo apt-get install libarchive-tools
-      - name: ⤵️ Get SOPS binary
-        run: |
-          ./.github/scripts/get-sops-binary.sh
-      - name: 🎯 Get version
-        run: |
-          BINARY_VERSION=$(./src/Devantler.SOPSCLI/runtimes/linux-x64/native/sops-linux-x64 --version | head -n 1 | sed 's/sops //' | sed 's/ (latest)//')
-          echo "BINARY_VERSION=v$BINARY_VERSION" >> $GITHUB_ENV
-      - name: ✍🏻 Create PR
-        uses: peter-evans/create-pull-request@v7
-        env:
-          BINARY_VERSION: ${{ env.BINARY_VERSION }}
-        with:
-          commit-message: "feat: Update  SOPS binary to ${{ env.BINARY_VERSION }}"
-          title: "feat: Update SOPS to ${{ env.BINARY_VERSION }}"
-          body: |
-            This PR updates the SOPS binary used by Devantler.SOPSCLI to ${{ env.BINARY_VERSION }}.
-          branch: update-sops-binary
-          delete-branch: true
-          labels: dependencies
-          reviewers: devantler
-          assignees: devantler
-          signoff: true
-          token: ${{ steps.generate-token.outputs.token }}
-          sign-commits: true
+  embed-binaries:
+    uses: devantler-tech/workflows/.github/workflows/dotnet-embed-binaries.yaml@main
+    secrets: inherit
+    with:
+      BINARY_NAME: sops
+      DOTNET_PROJECT_NAME: Devantler.SOPSCLI
+      SCRIPT_PATH: scripts/get-sops-binary.sh
