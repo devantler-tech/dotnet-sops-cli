@@ -46,7 +46,6 @@ public static class SOPS
   /// <param name="validation"></param>
   /// <param name="input"></param>
   /// <param name="silent"></param>
-  /// <param name="includeStdErr"></param>
   /// <param name="cancellationToken"></param>
   /// <returns></returns>
   public static async Task<(int ExitCode, string Message)> RunAsync(
@@ -54,7 +53,6 @@ public static class SOPS
     CommandResultValidation validation = CommandResultValidation.ZeroExitCode,
     bool input = false,
     bool silent = false,
-    bool includeStdErr = true,
     CancellationToken cancellationToken = default)
   {
     using var stdInConsole = input ? Stream.Null : Console.OpenStandardInput();
