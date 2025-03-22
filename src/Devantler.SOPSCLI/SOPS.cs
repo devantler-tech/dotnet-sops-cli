@@ -55,15 +55,31 @@ public static class SOPS
     bool silent = false,
     CancellationToken cancellationToken = default)
   {
-    using var stdInConsole = input ? Stream.Null : Console.OpenStandardInput();
-    using var stdOutConsole = silent ? Stream.Null : Console.OpenStandardOutput();
-    using var stdErrConsole = silent ? Stream.Null : Console.OpenStandardError();
-    var command = Command.WithArguments(arguments)
-      .WithValidation(validation)
-      .WithStandardInputPipe(PipeSource.FromStream(stdInConsole))
-      .WithStandardOutputPipe(PipeTarget.ToStream(stdOutConsole))
-      .WithStandardErrorPipe(PipeTarget.ToStream(stdErrConsole));
-    var result = await command.ExecuteBufferedAsync(cancellationToken);
-    return (result.ExitCode, result.StandardOutput.ToString() + result.StandardError.ToString());
+    if (arguments[0] == "edit")
+    {
+      var process = new ProcessStartInfo
+      {
+        FileName = Command.TargetFilePath,
+        Arguments = string.Join(' ', arguments),
+        UseShellExecute = true,
+        CreateNoWindow = true,
+      };
+      using var proc = Process.Start(process) ?? throw new InvalidOperationException("Failed to start sops process.");
+      await proc.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+      return (proc.ExitCode, string.Empty);
+    }
+    else
+    {
+      using var stdInConsole = input ? Stream.Null : Console.OpenStandardInput();
+      using var stdOutConsole = silent ? Stream.Null : Console.OpenStandardOutput();
+      using var stdErrConsole = silent ? Stream.Null : Console.OpenStandardError();
+      var command = Command.WithArguments(arguments)
+        .WithValidation(validation)
+        .WithStandardInputPipe(PipeSource.FromStream(stdInConsole))
+        .WithStandardOutputPipe(PipeTarget.ToStream(stdOutConsole))
+        .WithStandardErrorPipe(PipeTarget.ToStream(stdErrConsole));
+      var result = await command.ExecuteBufferedAsync(cancellationToken);
+      return (result.ExitCode, result.StandardOutput.ToString() + result.StandardError.ToString());
+    }
   }
 }
