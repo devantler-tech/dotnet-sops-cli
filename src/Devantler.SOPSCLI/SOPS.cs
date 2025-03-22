@@ -55,6 +55,7 @@ public static class SOPS
     bool silent = false,
     CancellationToken cancellationToken = default)
   {
+    ArgumentNullException.ThrowIfNull(arguments, nameof(arguments));
     if (arguments[0] == "edit")
     {
       var process = new ProcessStartInfo
