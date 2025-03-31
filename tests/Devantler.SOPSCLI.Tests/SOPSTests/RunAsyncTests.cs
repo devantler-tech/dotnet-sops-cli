@@ -19,7 +19,6 @@ public class RunAsyncTests
 
     // Assert
     Assert.Equal(0, exitCode);
-    // awk {print $2} | head -1
     string version = output.Trim().Split(["\r\n", "\r", "\n", " "], StringSplitOptions.RemoveEmptyEntries)[1];
     Assert.Matches(@"^\d+\.\d+\.\d+$", version);
   }
