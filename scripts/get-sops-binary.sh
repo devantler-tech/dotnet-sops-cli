@@ -27,5 +27,6 @@ get "https://getbin.io/getsops/sops?os=darwin&arch=amd64" "sops" "src/Devantler.
 get "https://getbin.io/getsops/sops?os=darwin&arch=arm64" "sops" "src/Devantler.SOPSCLI/runtimes/osx-arm64/native" "sops-osx-arm64" false
 get "https://getbin.io/getsops/sops?os=linux&arch=amd64" "sops" "src/Devantler.SOPSCLI/runtimes/linux-x64/native" "sops-linux-x64" false
 get "https://getbin.io/getsops/sops?os=linux&arch=arm64" "sops" "src/Devantler.SOPSCLI/runtimes/linux-arm64/native" "sops-linux-arm64" false
-get "https://getbin.io/getsops/sops?os=windows&arch=amd64" "sops.exe" "src/Devantler.SOPSCLI/runtimes/win-x64/native" "sops-win-x64.exe" false
-get "https://getbin.io/getsops/sops?os=windows&arch=arm64" "sops.exe" "src/Devantler.SOPSCLI/runtimes/win-arm64/native" "sops-win-arm64.exe" false
+version=$(curl -s https://api.github.com/repos/getsops/sops/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+get "https://github.com/getsops/sops/releases/download/$version/sops-$version.amd64.exe" "sops.exe" "src/Devantler.SOPSCLI/runtimes/win-x64/native" "sops-win-x64.exe" false
+get "https://github.com/getsops/sops/releases/download/$version/sops-$version.arm64.exe" "sops.exe" "src/Devantler.SOPSCLI/runtimes/win-arm64/native" "sops-win-arm64.exe" false
