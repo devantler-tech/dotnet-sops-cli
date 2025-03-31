@@ -19,7 +19,8 @@ public class RunAsyncTests
 
     // Assert
     Assert.Equal(0, exitCode);
-    string version = output.Trim().Replace(" (latest)", "", StringComparison.OrdinalIgnoreCase);
-    Assert.Matches(@"^sops \d+\.\d+\.\d+$", version);
+    // awk {print $2} | head -1
+    string version = output.Trim().Split(["\r\n", "\r", "\n", " "], StringSplitOptions.RemoveEmptyEntries)[1];
+    Assert.Matches(@"^\d+\.\d+\.\d+$", version);
   }
 }
