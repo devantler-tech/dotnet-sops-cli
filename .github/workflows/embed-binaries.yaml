@@ -15,4 +15,4 @@ jobs:
       BINARY_NAME: sops
       DOTNET_PROJECT_NAME: Devantler.SOPSCLI
       SCRIPT_PATH: scripts/get-sops-binary.sh
-      VERSION_ARGS: --version | awk '{print $2}'
+      VERSION_ARGS: --version | awk '{print $2}' | head -1
