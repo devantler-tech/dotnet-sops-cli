@@ -5,7 +5,8 @@ on:
     - cron: "59 23 * * *"
   workflow_dispatch:
 
-permissions: {}
+permissions:
+  issues: write
 
 jobs:
   embed-binaries:
