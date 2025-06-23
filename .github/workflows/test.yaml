@@ -17,13 +17,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     if: github.event.pull_request.draft == false
     steps:
-      - name: Install SOPS CLI
-        uses: jaxxstorm/action-install-gh-release@v2.1.0
-        with:
-          repo: getsops/sops
-          extension-matching: disable
-          rename-to: sops
-          chmod: 0755
+      - name: Setup SOPS
+        uses: nhedger/setup-sops@v2
       - name: Test .NET solution or project
         uses: devantler-tech/dotnet-test-action@main
         with:
