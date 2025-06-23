@@ -9,6 +9,11 @@ namespace DevantlerTech.SOPSCLI;
 /// </summary>
 public static class SOPS
 {
+  /// <summary>
+  /// Gets the sops CLI command.
+  /// </summary>
+  /// <returns></returns>
+  /// <exception cref="FileNotFoundException"></exception>
   public static Command GetCommand()
   {
     string binaryName = "sops";
@@ -51,7 +56,7 @@ public static class SOPS
     {
       var process = new ProcessStartInfo
       {
-        FileName = Command.TargetFilePath,
+        FileName = GetCommand().TargetFilePath,
         Arguments = string.Join(' ', arguments),
         UseShellExecute = true,
         CreateNoWindow = true,
