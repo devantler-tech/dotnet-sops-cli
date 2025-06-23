@@ -21,6 +21,9 @@ jobs:
         uses: jaxxstorm/action-install-gh-release@v2.1.0
         with:
           repo: getsops/sops
+          extension-matching: disable
+          rename-to: sops
+          chmod: 0755
       - name: Test .NET solution or project
         uses: devantler-tech/dotnet-test-action@main
         with:
