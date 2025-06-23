@@ -9,7 +9,7 @@ namespace DevantlerTech.SOPSCLI;
 /// </summary>
 public static class SOPS
 {
-  static Command Command
+  public static Command Command
   {
     get
     {
