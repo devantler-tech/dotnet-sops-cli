@@ -9,28 +9,25 @@ namespace DevantlerTech.SOPSCLI;
 /// </summary>
 public static class SOPS
 {
-  public static Command Command
+  public static Command GetCommand()
   {
-    get
-    {
-      string binaryName = "sops";
-      string? pathEnv = Environment.GetEnvironmentVariable("PATH");
+    string binaryName = "sops";
+    string? pathEnv = Environment.GetEnvironmentVariable("PATH");
 
-      if (!string.IsNullOrEmpty(pathEnv))
+    if (!string.IsNullOrEmpty(pathEnv))
+    {
+      string[] paths = pathEnv.Split(Path.PathSeparator);
+      foreach (string dir in paths)
       {
-        string[] paths = pathEnv.Split(Path.PathSeparator);
-        foreach (string dir in paths)
+        string fullPath = Path.Combine(dir, binaryName);
+        if (File.Exists(fullPath))
         {
-          string fullPath = Path.Combine(dir, binaryName);
-          if (File.Exists(fullPath))
-          {
-            return Cli.Wrap(fullPath);
-          }
+          return Cli.Wrap(fullPath);
         }
       }
-
-      throw new FileNotFoundException($"The '{binaryName}' CLI was not found in PATH.");
     }
+
+    throw new FileNotFoundException($"The '{binaryName}' CLI was not found in PATH.");
   }
 
   /// <summary>
@@ -68,7 +65,7 @@ public static class SOPS
       using var stdInConsole = input ? Stream.Null : Console.OpenStandardInput();
       using var stdOutConsole = silent ? Stream.Null : Console.OpenStandardOutput();
       using var stdErrConsole = silent ? Stream.Null : Console.OpenStandardError();
-      var command = Command.WithArguments(arguments)
+      var command = GetCommand().WithArguments(arguments)
         .WithValidation(validation)
         .WithStandardInputPipe(PipeSource.FromStream(stdInConsole))
         .WithStandardOutputPipe(PipeTarget.ToStream(stdOutConsole))
